@@ -27,6 +27,10 @@ public class PlayerLevelTag extends JavaPlugin {
     this.getServer().getPluginManager().registerEvents(new ListenerImpl(), this);
   }
 
+  enum Position {
+    PREFIX, SUFFIX
+  }
+
   class Config {
     private Position position;
     private String format;
@@ -34,10 +38,6 @@ public class PlayerLevelTag extends JavaPlugin {
     public Config(FileConfiguration fileConfiguration) {
       this.position = Position.valueOf(fileConfiguration.getString("tag.position", "PREFIX").toUpperCase());
       this.format = fileConfiguration.getString("tag.format", "&7[&a%d&7] &r");
-    }
-
-    enum Position {
-      PREFIX, SUFFIX
     }
 
     public Position getPosition() {
@@ -63,11 +63,12 @@ public class PlayerLevelTag extends JavaPlugin {
 
     private void setLevelTag(PlayerEvent event) {
       Player player = event.getPlayer();
-      if (player == null)
+      if (player == null) {
         return;
-      if (PlayerLevelTag.this.config.position == null || PlayerLevelTag.this.config.format == null)
+      }
+      if (PlayerLevelTag.this.config.position == null || PlayerLevelTag.this.config.format == null) {
         return;
-
+      }
       switch (PlayerLevelTag.this.config.position) {
         case PREFIX:
           NametagEdit.getApi().setPrefix(player, String.format(PlayerLevelTag.this.config.format, player.getLevel()));
