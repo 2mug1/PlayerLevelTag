@@ -34,10 +34,12 @@ public class PlayerLevelTag extends JavaPlugin {
   class Config {
     private Position position;
     private String format;
+    private boolean displayNameEnabled;
 
     public Config(FileConfiguration fileConfiguration) {
       this.position = Position.valueOf(fileConfiguration.getString("tag.position", "PREFIX").toUpperCase());
       this.format = fileConfiguration.getString("tag.format", "&7[&a%d&7] &r");
+      this.displayNameEnabled = fileConfiguration.getBoolean("tag.display_name_enabled", true);
     }
 
     public Position getPosition() {
@@ -46,6 +48,10 @@ public class PlayerLevelTag extends JavaPlugin {
 
     public String getFormat() {
       return format;
+    }
+
+    public boolean isDisplayNameEnabled() {
+      return displayNameEnabled;
     }
   }
 
@@ -72,9 +78,17 @@ public class PlayerLevelTag extends JavaPlugin {
       switch (PlayerLevelTag.this.config.position) {
         case PREFIX:
           NametagEdit.getApi().setPrefix(player, String.format(PlayerLevelTag.this.config.format, player.getLevel()));
+          if (PlayerLevelTag.this.config.displayNameEnabled) {
+            player.setDisplayName(String.format(PlayerLevelTag.this.config.format, player.getLevel()) + player.getName());
+          }
           break;
         case SUFFIX:
           NametagEdit.getApi().setSuffix(player, String.format(PlayerLevelTag.this.config.format, player.getLevel()));
+          if (PlayerLevelTag.this.config.displayNameEnabled) {
+            player.setDisplayName(player.getName() + String.format(PlayerLevelTag.this.config.format, player.getLevel()));
+          }
+          break;
+        default:
           break;
       }
     }
