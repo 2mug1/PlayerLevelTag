@@ -83,7 +83,7 @@ public class PlayerLevelTag extends JavaPlugin {
             public void run() {
               NametagEdit.getApi().setPrefix(player, String.format(PlayerLevelTag.this.config.format, player.getLevel()));
               if (PlayerLevelTag.this.config.displayNameEnabled) {
-                player.setDisplayName(String.format(PlayerLevelTag.this.config.format, player.getLevel()) + player.getDisplayName());
+                player.setDisplayName(NametagEdit.getApi().getNametag(player).getPrefix() + player.getName() + NametagEdit.getApi().getNametag(player).getSuffix());
               }
             }
           }.runTaskLater(PlayerLevelTag.this, 1);
@@ -94,7 +94,7 @@ public class PlayerLevelTag extends JavaPlugin {
             public void run() {
               NametagEdit.getApi().setSuffix(player, String.format(PlayerLevelTag.this.config.format, player.getLevel()));
               if (PlayerLevelTag.this.config.displayNameEnabled) {
-                player.setDisplayName(player.getDisplayName() + String.format(PlayerLevelTag.this.config.format, player.getLevel()));
+                player.setDisplayName(NametagEdit.getApi().getNametag(player).getPrefix() + player.getName() + NametagEdit.getApi().getNametag(player).getSuffix());
               }
             }
           }.runTaskLater(PlayerLevelTag.this, 1);
