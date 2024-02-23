@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.nametagedit.plugin.NametagEdit;
 
@@ -77,16 +78,26 @@ public class PlayerLevelTag extends JavaPlugin {
       }
       switch (PlayerLevelTag.this.config.position) {
         case PREFIX:
-          NametagEdit.getApi().setPrefix(player, String.format(PlayerLevelTag.this.config.format, player.getLevel()));
-          if (PlayerLevelTag.this.config.displayNameEnabled) {
-            player.setDisplayName(String.format(PlayerLevelTag.this.config.format, player.getLevel()) + player.getName());
-          }
+          new BukkitRunnable() {
+            @Override
+            public void run() {
+              NametagEdit.getApi().setPrefix(player, String.format(PlayerLevelTag.this.config.format, player.getLevel()));
+              if (PlayerLevelTag.this.config.displayNameEnabled) {
+                player.setDisplayName(String.format(PlayerLevelTag.this.config.format, player.getLevel()) + player.getDisplayName());
+              }
+            }
+          }.runTaskLater(PlayerLevelTag.this, 1);
           break;
         case SUFFIX:
-          NametagEdit.getApi().setSuffix(player, String.format(PlayerLevelTag.this.config.format, player.getLevel()));
-          if (PlayerLevelTag.this.config.displayNameEnabled) {
-            player.setDisplayName(player.getName() + String.format(PlayerLevelTag.this.config.format, player.getLevel()));
-          }
+          new BukkitRunnable() {
+            @Override
+            public void run() {
+              NametagEdit.getApi().setSuffix(player, String.format(PlayerLevelTag.this.config.format, player.getLevel()));
+              if (PlayerLevelTag.this.config.displayNameEnabled) {
+                player.setDisplayName(player.getDisplayName() + String.format(PlayerLevelTag.this.config.format, player.getLevel()));
+              }
+            }
+          }.runTaskLater(PlayerLevelTag.this, 1);
           break;
         default:
           break;
